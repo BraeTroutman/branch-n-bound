@@ -8,14 +8,14 @@ Theory of Algorithms Lesson April 19th 2023
 2. Identify examples of problems that can be solved with each
 3. Define example N/P Complete Prob for BnB solving
 
-## Backtracking
+## Backtracking `30 min`
 
 Search Problems
 
-1. Example Satisfiability: conventional solution
-2. Satisfiability: how can we prune solutions
+1. Example Satisfiability: defining our search space
+2. Satisfiability: limiting our search space
 
-## Branch and Bound
+## Branch and Bound `40 min`
 
 Optimization Problems
 
