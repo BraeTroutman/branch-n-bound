@@ -20,5 +20,5 @@ Search Problems
 Optimization Problems
 
 1. Integer Linear Programming
-2. 0/1 Knapsack -> ILP: The power of reductions
+2. 0/1 Knapsack -> ILP: The power of reductions (demo solving knapsack with optimization library)
 
