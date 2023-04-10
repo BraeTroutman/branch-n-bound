@@ -1,7 +1,7 @@
 import sys
 import re
 import numpy as np
-import gurobipy as grb
+from gurobipy import Model, GRB, quicksum
 
 filename = sys.argv[1]
 
@@ -20,10 +20,10 @@ for i, (wt, vl) in enumerate(wtsvals):
 
 def knapsack(W, w, v):
     n = len(w)
-    model = grb.Model()
-    item = model.addVars(n, vtype=grb.GRB.BINARY)
-    model.setObjective(grb.quicksum(v[i]*item[i] for i in range(n)), grb.GRB.MAXIMIZE)
-    model.addConstr(grb.quicksum(w[i]*item[i] for i in range(n)) <= W)
+    model = Model()
+    item = model.addVars(n, vtype=GRB.BINARY)
+    model.setObjective(quicksum(v[i]*item[i] for i in range(n)), GRB.MAXIMIZE)
+    model.addConstr(quicksum(w[i]*item[i] for i in range(n)) <= W)
 
     model.optimize()
 
