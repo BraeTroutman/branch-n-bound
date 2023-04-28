@@ -1,9 +1,9 @@
-module kp
-export ilpknapsack, dncknapsack, dpknapsack, amkknapsack, readwv
+module Knapsack
 
 using JuMP
 using HiGHS
 
+"""merge two linked lists iteratively into one"""
 function merge(left, right)
 	out = fill((0,0), length(left) + length(right))
 
@@ -34,10 +34,12 @@ end
 addtuple((x,y), (a,b)) = (x+a,y+b)
 showrow(row) = join(["<$(w),$(v)>" for (w,v) in row], " ")
 
+"""add a vector of tuples pairwise to another"""
 function add(row, w, v)
 	[addtuple(tp, (w,v)) for tp ∈ row]
 end
 
+"""delete tuples from an ordered vector that are not strictly increasing in their second entry"""
 function kill(row, W)
 	(wp, vp) = row[1]
 	out = [(wp, vp)]
@@ -52,6 +54,7 @@ function kill(row, W)
 	return out
 end
 
+"""add-merge-kill algorithm to find optimal knapsack value given weights, values, and capacity"""
 function amkknapsack(W, w, v)
 	row = [(0,0)]
 	i::Int32 = 0	
@@ -68,6 +71,7 @@ function amkknapsack(W, w, v)
 end
 
 
+"""solve the 0/1 knapsack problem as a (binary) integer linear program"""
 function ilpknapsack(W, w, v)
 	model = Model(HiGHS.Optimizer)
     set_silent(model)
@@ -83,6 +87,7 @@ end
 
 getitems(items) = findall(x -> x > 0.5, items)
 
+"""space efficient dynamic programming to calculate optimal value for 0/1 knapsack"""
 function dpknapsack(W::Int64, w::Vector{Int64}, v::Vector{Int64})
     Rows = zeros(2, W+1)
 
@@ -96,12 +101,13 @@ function dpknapsack(W::Int64, w::Vector{Int64}, v::Vector{Int64})
                 Rows[2,c+1] = Rows[1,c+1]
             end
         end
-        Rows[1,:] = copy(Rows[2,:])
+        Rows[1,:] .= Rows[2,:]
     end
 
     return Rows[2,:]
 end
 
+"""space efficient divide-and-conquer utilizing dp-knapsack to calculate optimal value and subset of items to choose"""
 function dncknapsack(W::Int64, i, w::Vector{Int64}, v::Vector{Int64})
     N = length(i)
     if N == 1
@@ -130,6 +136,7 @@ function dncknapsack(W::Int64, i, w::Vector{Int64}, v::Vector{Int64})
     return [left ; right]
 end
 
+"""read capacity, num items, weights, values from file"""
 function readwv(filename)
 	lines = open(readlines, filename)
 	W = parse(Int64, match(r"\d+", lines[1]).match)
@@ -147,4 +154,5 @@ function readwv(filename)
     return (W, N, w, v)
 end
 
-end
+
+end # module Knapsack
